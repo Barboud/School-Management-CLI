@@ -3,11 +3,28 @@ export function parseCommand(userInput) {
 
   const trimmedUserInput = userInput.trim();
   const splitUserInput = trimmedUserInput.split(' ');
-  if (
-    splitUserInput[0].toUpperCase() !== 'TRAINEE' &&
-    splitUserInput[0].toUpperCase() !== 'COURSE'
-  ) {
+  if (splitUserInput.length > 5 || splitUserInput.length === 1) {
     return false;
   }
-  return true;
+  const command = splitUserInput[0].toUpperCase();
+  const subCommand = splitUserInput[1].toUpperCase();
+
+  if (!determineEntities(command)) {
+    return false;
+  }
+
+  const parameters = splitUserInput.slice(2);
+
+  return {
+    command,
+    subCommand,
+    parameters,
+  };
+}
+
+function determineEntities(command) {
+  if (command === 'TRAINEE' || command === 'COURSE') {
+    return true;
+  }
+  return false;
 }
