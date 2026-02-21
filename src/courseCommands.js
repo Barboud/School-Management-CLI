@@ -30,4 +30,5 @@ function getAllCourses() {
 
 export function handleCourseCommand(subcommand, args) {
   // Read the subcommand and call the appropriate function with the arguments
+  return 'Handle Course Command';
 }

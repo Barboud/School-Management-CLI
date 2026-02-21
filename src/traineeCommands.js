@@ -22,4 +22,5 @@ function fetchAllTrainees() {
 
 export function handleTraineeCommand(subcommand, args) {
   // Read the subcommand and call the appropriate function with the arguments
+  return 'Handle Trainee Command';
 }
