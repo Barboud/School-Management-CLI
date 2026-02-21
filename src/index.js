@@ -1,4 +1,4 @@
-import { parseCommand } from './command-parser.js';
+import { parseCommand, commandDispatcher } from './command-parser.js';
 
 import chalk from 'chalk';
 
@@ -8,15 +8,16 @@ const prompt = promptSync();
 console.log(
   chalk.bold('Welcome to the School Management\! \nType your command below.')
 );
-console.log('To exit the program, type "exit".');
+console.log('To exit the program, type "QUIT" or "q".');
 
 // let input = '';
 while (true) {
   const userInput = prompt('> ');
-  if (userInput === 'exit') {
+  if (userInput === 'QUIT' || userInput === 'q') {
     console.log('Bye!');
     break;
   } else {
-    console.log(parseCommand(userInput));
+    const command = parseCommand(userInput);
+    console.log(commandDispatcher(command));
   }
 }
