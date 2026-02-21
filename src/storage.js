@@ -22,8 +22,19 @@ export function loadTraineeData() {
   }
 }
 
-export function saveTraineeData() {
-  // Use the fs module to write the updated trainee data back to the trainees.json file
+export function saveTraineeData(traineeData) {
+  try {
+    fs.writeFileSync(
+      TRAINEE_DATA_FILE_PATH,
+      JSON.stringify(traineeData, null, 2)
+    );
+    return true;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('File (trainees.json) not found');
+    }
+  }
+  return false;
 }
 
 export function loadCourseData() {
@@ -45,9 +56,17 @@ export function loadCourseData() {
   }
 }
 
-export function saveCourseData() {
-  // TODO: Implement
+export function saveCourseData(courseData) {
+  try {
+    fs.writeFileSync(
+      COURSE_DATA_FILE_PATH,
+      JSON.stringify(courseData, null, 2)
+    );
+    return true;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('File (courses.json) not found');
+    }
+  }
+  return false;
 }
-
-console.log(loadTraineeData());
-console.log(loadCourseData());
