@@ -3,15 +3,66 @@
     "id": 87421,
     "name": "Intro to JavaScript Course",
     "startDate": "2026-02-01",
-    "participants": [
-      12345,
-      12346
-    ]
+    "participants": [19345, 28471, 56210, 90123, 44789]
   },
   {
     "id": 54824,
     "name": "Intro to PHP Course",
     "startDate": "2025-03-01",
+    "participants": [28471, 77012, 33890]
+  },
+  {
+    "id": 91234,
+    "name": "Intro to Python Course",
+    "startDate": "2025-06-15",
+    "participants": [19345, 66109, 45001, 77834]
+  },
+  {
+    "id": 33445,
+    "name": "Web Basics Course",
+    "startDate": "2025-09-01",
     "participants": []
+  },
+  {
+    "id": 77889,
+    "name": "Node.js Fundamentals",
+    "startDate": "2026-01-10",
+    "participants": [90123, 56210]
+  },
+  {
+    "id": 66554,
+    "name": "Databases 101",
+    "startDate": "2025-11-05",
+    "participants": [88901, 45001, 99012, 33890, 77012]
+  },
+  {
+    "id": 22331,
+    "name": "Linux Basics",
+    "startDate": "2025-10-01",
+    "participants": [28471, 66109]
+  },
+  {
+    "id": 99012,
+    "name": "Cloud Fundamentals",
+    "startDate": "2026-03-20",
+    "participants": [44789, 19345, 81234]
+  },
+  {
+    "id": 44119,
+    "name": "Git & Version Control",
+    "startDate": "2025-08-10",
+    "participants": [56210, 33890, 90123]
+  },
+  {
+    "id": 55881,
+    "name": "Backend Basics",
+    "startDate": "2026-04-01",
+    "participants": [45001, 66109, 88901, 81234]
+  },
+  {
+    "id": 60117,
+    "name": "API Design Fundamentals",
+    "startDate": "2026-05-15",
+    "participants": [19345]
   }
 ]

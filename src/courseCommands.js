@@ -26,7 +26,10 @@ function getCourse() {
 }
 
 function getAllCourses() {
-  const courses = loadCourseData();
+  const courses = loadCourseData().sort(
+    (a, b) => new Date(a.startDate) - new Date(b.startDate)
+  );
+  console.log(chalk.bold('\nCourses:'));
   for (const course of courses) {
     const { id, name, startDate, participants } = course;
 
@@ -37,15 +40,13 @@ function getAllCourses() {
       courseStatus = '';
     }
 
-    console.log(
-      `${id}. ${chalk.cyan(name)} - Starting on ${startDate} ${courseStatus}`
-    );
+    console.log(`${id}. ${chalk.cyan(name)} - ${startDate} ${courseStatus}`);
   }
-  console.log(`Total : ${courses.length}`);
+  console.log(`\nTotal : ${courses.length}\n`);
 }
 
 function isCourseFull(participants) {
-  return participants.length > 5;
+  return participants.length > 4;
 }
 
 export function handleCourseCommand(subcommand, args) {
