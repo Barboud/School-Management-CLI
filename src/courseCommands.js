@@ -1,28 +1,34 @@
 import { saveCourseData, loadCourseData } from './storage.js';
 import chalk from 'chalk';
 
-function addCourse() {
+function addCourse(args) {
   // TODO: Implement logic
+  console.log(args);
 }
 
-function updateCourse() {
+function updateCourse(args) {
   // TODO: Implement logic
+  console.log(args);
 }
 
-function deleteCourse() {
+function deleteCourse(args) {
   // TODO: Implement logic
+  console.log(args);
 }
 
-function joinCourse() {
+function joinCourse(args) {
   // TODO: Implement logic
+  console.log(args);
 }
 
-function leaveCourse() {
+function leaveCourse(args) {
   // TODO: Implement logic
+  console.log(args);
 }
 
-function getCourse() {
+function getCourse(args) {
   // TODO: Implement logic
+  console.log(args);
 }
 
 function getAllCourses() {
@@ -50,19 +56,98 @@ function isCourseFull(participants) {
 }
 
 export function handleCourseCommand(subcommand, args) {
-  // Read the subcommand and call the appropriate function with the arguments
-  return getAllCourses();
-}
+  switch (subcommand) {
+    case 'ADD':
+      if (getArgumentsLength(args) !== 2) {
+        return console.log(
+          chalk.bold.red(
+            'Error: You must provide exactly 2 arguments to add a course.\n'
+          )
+        );
+      } else {
+        return addCourse(args);
+      }
 
-function validateSubCommand(subcommand) {
-  // ADD UPDATE DELETE JOIN LEAVE GET GETALL
-  switch (key) {
-    case value:
-      break;
+    case 'UPDATE':
+      if (getArgumentsLength(args) !== 3) {
+        return console.log(
+          chalk.bold.red(
+            'Error: You must provide exactly 3 arguments to update a course.\n'
+          )
+        );
+      } else {
+        return updateCourse(args);
+      }
+
+    case 'DELETE':
+      if (getArgumentsLength(args) !== 1) {
+        return console.log(
+          chalk.bold.red(
+            'Error: You must provide exactly 1 arguments to update a course.\n'
+          )
+        );
+      } else {
+        return deleteCourse(args);
+      }
+
+    case 'JOIN':
+      if (getArgumentsLength(args) !== 2) {
+        return console.log(
+          chalk.bold.red(
+            'Error: You must provide exactly 2 arguments to join a course.\n'
+          )
+        );
+      } else {
+        return joinCourse(args);
+      }
+
+    case 'LEAVE':
+      if (getArgumentsLength(args) !== 2) {
+        return console.log(
+          chalk.bold.red(
+            'Error: You must provide exactly 2 arguments to leave a course.\n'
+          )
+        );
+      } else {
+        return leaveCourse(args);
+      }
+
+    case 'GET':
+      if (getArgumentsLength(args) !== 1) {
+        return console.log(
+          chalk.bold.red(
+            'Error: You must provide exactly 1 arguments to get a course.\n'
+          )
+        );
+      } else {
+        return getCourse(args);
+      }
+
+    case 'GETALL':
+      if (getArgumentsLength(args) !== 0) {
+        return console.log(
+          chalk.bold.red('Error: GETALL does not take any arguments.\n')
+        );
+      } else {
+        return getAllCourses();
+      }
 
     default:
-      break;
+      console.log(chalk.bold.red('Error: Invalid course subcommand.'));
   }
+}
+
+function validateArguments(args, number) {
+  if (args.length !== number) {
+    const argWord = number === 1 ? 'argument' : 'arguments';
+    return console.log(
+      chalk.bold.red(`Error: You must provide exactly ${number} ${argWord}.\n`)
+    );
+  }
+}
+
+function getArgumentsLength(args) {
+  return args.length;
 }
 
 // I use this to insure is there a course
