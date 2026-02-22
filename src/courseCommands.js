@@ -1,4 +1,5 @@
 import { saveCourseData, loadCourseData } from './storage.js';
+import chalk from 'chalk';
 
 function addCourse() {
   // TODO: Implement logic
@@ -25,10 +26,43 @@ function getCourse() {
 }
 
 function getAllCourses() {
-  // TODO: Implement logic
+  const courses = loadCourseData();
+  for (const course of courses) {
+    const { id, name, startDate, participants } = course;
+
+    let courseStatus = null;
+    if (isCourseFull(participants)) {
+      courseStatus = chalk.bgRed.white(`FULL`);
+    } else {
+      courseStatus = '';
+    }
+
+    console.log(
+      `${id}. ${chalk.cyan(name)} - Starting on ${startDate} ${courseStatus}`
+    );
+  }
+  console.log(`Total : ${courses.length}`);
+}
+
+function isCourseFull(participants) {
+  return participants.length > 5;
 }
 
 export function handleCourseCommand(subcommand, args) {
   // Read the subcommand and call the appropriate function with the arguments
-  return (subcommand, args);
+  return getAllCourses();
 }
+
+function validateSubCommand(subcommand) {
+  // ADD UPDATE DELETE JOIN LEAVE GET GETALL
+  switch (key) {
+    case value:
+      break;
+
+    default:
+      break;
+  }
+}
+
+// I use this to insure is there a course
+function getCourseByID() {}
