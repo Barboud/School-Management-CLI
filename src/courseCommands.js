@@ -2,7 +2,14 @@ import { saveCourseData, loadCourseData } from './storage.js';
 import chalk from 'chalk';
 
 function addCourse(args) {
-  if (validateArguments(args, 2) && validateDate(args, 1)) {
+  if (!validateArguments(args, 2)) {
+    console.log(
+      chalk.bold.red('ERROR: Must provide course name and start date')
+    );
+    return false;
+  }
+
+  if (validateDate(args, 1)) {
     const courses = loadCourseData();
     const uniqueId = generateUniqueId();
 
@@ -46,8 +53,26 @@ function leaveCourse(args) {
 }
 
 function getCourse(args) {
-  // TODO: Implement logic
-  console.log(args);
+  const id = Number(args);
+  if (
+    id === NaN ||
+    getArgumentsLength(args) > 1 ||
+    isCourseExist(id) !== true
+  ) {
+    console.log(chalk.bold.red(`ERROR: Course with ID ${args} does not exist`));
+    return false;
+  }
+
+  const courses = loadCourseData();
+  const course = courses.filter((course) => course.id === id);
+
+  console.log(`${course[0].id} ${course[0].name} ${course[0].startDate}`);
+
+  console.log(`Participants (${course[0].participants.length}):`);
+  for (let i = 0; i < course[0].participants.length; i++) {
+    console.log(`- ${course[0].participants[i]}`);
+  }
+  return true;
 }
 
 function getAllCourses() {
@@ -110,10 +135,6 @@ export function handleCourseCommand(subcommand, args) {
 
 function validateArguments(args, number) {
   if (args.length !== number) {
-    const argWord = number === 1 ? 'argument' : 'arguments';
-    console.log(
-      chalk.bold.red(`Error: You must provide exactly ${number} ${argWord}.`)
-    );
     return false;
   }
   return true;
@@ -131,26 +152,23 @@ function validateDate(args, index) {
 
   if (splitDate.length !== 3 || args[index].length !== 10) {
     console.log(
-      chalk.bold.red('Error: Please provide a date in the format yyyy-MM-dd')
+      chalk.bold.red('ERROR: Invalid start date. Must be in yyyy-MM-dd format')
     );
     return false;
   } else if (year < 2020 || year > 3000) {
     console.log(
-      chalk.bold.red('Error: Please provide a year between 2020 and 2999')
+      chalk.bold.red('ERROR: Please provide a year between 2020 and 2999')
     );
     return false;
   } else if (month > 12 || month < 1) {
-    console.log(chalk.bold.red('Error: Please provide a valid month (01-12)'));
+    console.log(chalk.bold.red('ERROR: Please provide a valid month (01-12)'));
     return false;
   } else if (day > 31 || day < 1) {
-    console.log(chalk.bold.red('Error: Please provide a valid day (01-31)'));
+    console.log(chalk.bold.red('ERROR: Please provide a valid day (01-31)'));
     return false;
   }
   return true;
 }
-
-// I use this to insure is there a course
-function getCourseByID() {}
 
 function generateUniqueId() {
   function getUniqueId() {
@@ -169,4 +187,13 @@ function generateUniqueId() {
   }
 
   return uniqueId;
+}
+
+function isCourseExist(id) {
+  const courses = loadCourseData();
+  const course = courses.filter((course) => course.id === id);
+  if (course.length === 0) {
+    return false;
+  }
+  return true;
 }
