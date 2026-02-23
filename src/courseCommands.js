@@ -2,7 +2,7 @@ import { saveCourseData, loadCourseData } from './storage.js';
 import chalk from 'chalk';
 
 function addCourse(args) {
-  if (!validateArguments(args, 2)) {
+  if (args.length !== 2) {
     console.log(
       chalk.bold.red('ERROR: Must provide course name and start date')
     );
@@ -33,13 +33,57 @@ function addCourse(args) {
 }
 
 function updateCourse(args) {
-  // TODO: Implement logic
-  console.log(args);
+  if (args.length !== 3) {
+    console.log(chalk.bold.red(`ERROR: Must provide ID, name and start date.`));
+    return false;
+  }
+  const id = Number(args[0]);
+  if (isCourseExist(id) !== true) {
+    console.log(
+      chalk.bold.red(`ERROR: Course with ID ${args[0]} does not exist`)
+    );
+    return false;
+  }
+
+  const courses = loadCourseData();
+
+  const oldCourseDetails = courses.filter((course) => course.id === id);
+  const coursesAfterDelete = courses.filter(
+    (course) => course.id !== oldCourseDetails[0].id
+  );
+
+  const newCourseDetails = {
+    id: oldCourseDetails[0].id,
+    name: args[1],
+    startDate: args[2],
+    participants: oldCourseDetails[0].participants,
+  };
+
+  coursesAfterDelete.push(newCourseDetails);
+
+  if (saveCourseData(coursesAfterDelete)) {
+    return console.log(chalk.green(`UPDATED: ${id} ${args[1]} ${args[2]}`));
+  }
 }
 
 function deleteCourse(args) {
-  // TODO: Implement logic
-  console.log(args);
+  if (args.length !== 1) {
+    console.log(chalk.bold.red(`ERROR: Must provide a Id`));
+    return false;
+  }
+  const id = Number(args);
+  if (isCourseExist(id) !== true) {
+    console.log(chalk.bold.red(`ERROR: Course with ID ${args} does not exist`));
+    return false;
+  }
+
+  const courses = loadCourseData();
+  const courseName = courses.filter((course) => course.id === id);
+  const newCoursesAfterDelete = courses.filter((course) => course.id !== id);
+
+  if (saveCourseData(newCoursesAfterDelete)) {
+    return console.log(chalk.green(`DELETED: ${id} ${courseName[0].name}`));
+  }
 }
 
 function joinCourse(args) {
@@ -54,11 +98,11 @@ function leaveCourse(args) {
 
 function getCourse(args) {
   const id = Number(args);
-  if (
-    id === NaN ||
-    getArgumentsLength(args) > 1 ||
-    isCourseExist(id) !== true
-  ) {
+  if (args.length !== 1) {
+    console.log(chalk.bold.red(`ERROR: Must provide a ID`));
+    return false;
+  }
+  if (isCourseExist(id) !== true) {
     console.log(chalk.bold.red(`ERROR: Course with ID ${args} does not exist`));
     return false;
   }
@@ -105,7 +149,7 @@ export function handleCourseCommand(subcommand, args) {
       return addCourse(args);
 
     case 'UPDATE':
-      updateCourse(args);
+      return updateCourse(args);
 
     case 'DELETE':
       return deleteCourse(args);
@@ -120,7 +164,7 @@ export function handleCourseCommand(subcommand, args) {
       return getCourse(args);
 
     case 'GETALL':
-      if (getArgumentsLength(args) !== 0) {
+      if (args.length !== 0) {
         return console.log(
           chalk.bold.red('Error: GETALL does not take any arguments.')
         );
@@ -131,17 +175,6 @@ export function handleCourseCommand(subcommand, args) {
     default:
       console.log(chalk.bold.red('Error: Invalid course subcommand.'));
   }
-}
-
-function validateArguments(args, number) {
-  if (args.length !== number) {
-    return false;
-  }
-  return true;
-}
-
-function getArgumentsLength(args) {
-  return args.length;
 }
 
 function validateDate(args, index) {
