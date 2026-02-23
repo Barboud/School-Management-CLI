@@ -18,6 +18,6 @@ while (true) {
     break;
   } else {
     const command = parseCommand(userInput);
-    console.log(commandDispatcher(command));
+    commandDispatcher(command);
   }
 }
