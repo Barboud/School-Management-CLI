@@ -10,10 +10,9 @@ console.log(
 );
 console.log('To exit the program, type "QUIT" or "q".');
 
-// let input = '';
 while (true) {
   const userInput = prompt('> ');
-  if (userInput === 'QUIT' || userInput === 'q') {
+  if (userInput === 'QUIT' || userInput === 'q' || userInput === null) {
     console.log('Bye!');
     break;
   } else {
