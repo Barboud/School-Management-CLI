@@ -92,7 +92,7 @@ function deleteTrainee(args) {
   }
 }
 
-function fetchTrainee(args) {
+export function fetchTrainee(args) {
   const id = Number(args);
   if (args.length !== 1) {
     console.log(chalk.bold.red(`ERROR: Must provide a ID`));
@@ -168,7 +168,7 @@ export function handleTraineeCommand(subcommand, args) {
   }
 }
 
-function isTraineeExist(id) {
+export function isTraineeExist(id) {
   const trainees = loadTraineeData();
   const trainee = trainees.filter((trainee) => trainee.id === id);
   if (trainee.length === 0) {
@@ -194,4 +194,13 @@ function generateUniqueId() {
   }
 
   return uniqueId;
+}
+
+export function getTraineeById(args) {
+  const id = Number(args);
+
+  const trainees = loadTraineeData();
+  const trainee = trainees.filter((trainee) => trainee.id === id);
+
+  return trainee;
 }
