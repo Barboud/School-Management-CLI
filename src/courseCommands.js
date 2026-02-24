@@ -49,21 +49,18 @@ function updateCourse(args) {
   if (validateDate(args, 2)) {
     const courses = loadCourseData();
 
-    const oldCourseDetails = courses.filter((course) => course.id === id);
-    const coursesAfterDelete = courses.filter(
-      (course) => course.id !== oldCourseDetails[0].id
-    );
+    const updatedCourses = courses.map((course) => {
+      if (course.id === id) {
+        return {
+          ...course,
+          name: args[1],
+          startDate: args[2],
+        };
+      }
+      return course;
+    });
 
-    const newCourseDetails = {
-      id: oldCourseDetails[0].id,
-      name: args[1],
-      startDate: args[2],
-      participants: oldCourseDetails[0].participants,
-    };
-
-    coursesAfterDelete.push(newCourseDetails);
-
-    if (saveCourseData(coursesAfterDelete)) {
+    if (saveCourseData(updatedCourses)) {
       return console.log(chalk.green(`UPDATED: ${id} ${args[1]} ${args[2]}`));
     }
   }
@@ -104,7 +101,7 @@ function joinCourse(args) {
   const idTrainee = Number(args[1]);
   if (isTraineeExist(idTrainee) !== true) {
     console.log(
-      chalk.bold.red(`ERROR: Trainee with ID ${args[0]} does not exist`)
+      chalk.bold.red(`ERROR: Trainee with ID ${args[1]} does not exist`)
     );
     return false;
   }
@@ -162,7 +159,57 @@ function joinCourse(args) {
 }
 
 function leaveCourse(args) {
-  // TODO: Implement logic
+  if (args.length !== 2) {
+    console.log(chalk.bold.red(`ERROR: Must provide course ID and trainee ID`));
+    return false;
+  }
+  const idCourse = Number(args[0]);
+  if (isCourseExist(idCourse) !== true) {
+    console.log(
+      chalk.bold.red(`ERROR: Course with ID ${args[0]} does not exist`)
+    );
+    return false;
+  }
+  const idTrainee = Number(args[1]);
+  if (isTraineeExist(idTrainee) !== true) {
+    console.log(
+      chalk.bold.red(`ERROR: Trainee with ID ${args[1]} does not exist`)
+    );
+    return false;
+  }
+
+  const courses = loadCourseData();
+  const course = courses.filter((course) => course.id === idCourse);
+
+  let isTraineeInCourse = false;
+  for (let i = 0; i < course[0].participants.length; i++) {
+    if (idTrainee === course[0].participants[i]) {
+      isTraineeInCourse = true;
+    }
+  }
+  if (isTraineeInCourse === false) {
+    console.log(chalk.bold.red(`ERROR: The Trainee did not join the course`));
+    return false;
+  }
+
+  const newCourses = courses.map((course) => {
+    if (course.id === idCourse) {
+      return {
+        ...course,
+        participants: course.participants.filter(
+          (participant) => participant !== idTrainee
+        ),
+      };
+    }
+    return course;
+  });
+
+  const traineeDetails = getTraineeById(idTrainee);
+  if (saveCourseData(newCourses)) {
+    return console.log(
+      chalk.green(`${traineeDetails[0].firstName} Left ${course[0].name}`)
+    );
+  }
 }
 
 function getCourse(args) {
