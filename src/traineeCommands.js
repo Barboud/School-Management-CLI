@@ -195,3 +195,12 @@ function generateUniqueId() {
 
   return uniqueId;
 }
+
+export function getTraineeById(args) {
+  const id = Number(args);
+
+  const trainees = loadTraineeData();
+  const trainee = trainees.filter((trainee) => trainee.id === id);
+
+  return trainee;
+}
