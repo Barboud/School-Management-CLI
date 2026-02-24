@@ -99,7 +99,7 @@ function joinCourse(args) {
     );
     return false;
   }
-  const idTrainee = Number(args[0]);
+  const idTrainee = Number(args[1]);
   if (isTraineeExist(idTrainee) !== true) {
     console.log(
       chalk.bold.red(`ERROR: Trainee with ID ${args[0]} does not exist`)
@@ -108,24 +108,54 @@ function joinCourse(args) {
   }
 
   const courses = loadCourseData();
-  const course = courses.filter((course) => course.id === id);
+  const course = courses.filter((course) => course.id === idCourse);
+
+  let count = 0;
+  for (const course of courses) {
+    for (let i = 0; i < course.participants.length; i++) {
+      if (course.participants[i] === idTrainee) {
+        count = count + 1;
+      }
+    }
+  }
+  if (count > 4) {
+    console.log(
+      chalk.bold.red(
+        `ERROR: A trainee is not allowed to join more than 5 courses.`
+      )
+    );
+    return false;
+  }
+
+  for (let i = 0; i < course[0].participants.length; i++) {
+    if (idTrainee === course[0].participants[i]) {
+      console.log(
+        chalk.bold.red(`ERROR: The Trainee has already joined this course`)
+      );
+      return false;
+    }
+  }
+
   if (isCourseFull(course[0].participants)) {
     console.log(chalk.bold.red(`ERROR: Course is full`));
     return false;
   }
 
   const newCourses = courses.map((course) => {
-    if (course.id === id) {
+    if (course.id === idCourse) {
       return {
         ...course,
-        participants: [...course.participants, ...args.slice(1)],
+        participants: [...course.participants, ...[idTrainee]],
       };
     }
     return course;
   });
 
+  const traineeDetails = getTraineeById(idTrainee);
   if (saveCourseData(newCourses)) {
-    return console.log(chalk.green(`<traineeName> Joined <courseName>`));
+    return console.log(
+      chalk.green(`${traineeDetails[0].firstName} Joined ${course[0].name}`)
+    );
   }
 }
 
