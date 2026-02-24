@@ -46,24 +46,26 @@ function updateCourse(args) {
     return false;
   }
 
-  const courses = loadCourseData();
+  if (validateDate(args, 2)) {
+    const courses = loadCourseData();
 
-  const oldCourseDetails = courses.filter((course) => course.id === id);
-  const coursesAfterDelete = courses.filter(
-    (course) => course.id !== oldCourseDetails[0].id
-  );
+    const oldCourseDetails = courses.filter((course) => course.id === id);
+    const coursesAfterDelete = courses.filter(
+      (course) => course.id !== oldCourseDetails[0].id
+    );
 
-  const newCourseDetails = {
-    id: oldCourseDetails[0].id,
-    name: args[1],
-    startDate: args[2],
-    participants: oldCourseDetails[0].participants,
-  };
+    const newCourseDetails = {
+      id: oldCourseDetails[0].id,
+      name: args[1],
+      startDate: args[2],
+      participants: oldCourseDetails[0].participants,
+    };
 
-  coursesAfterDelete.push(newCourseDetails);
+    coursesAfterDelete.push(newCourseDetails);
 
-  if (saveCourseData(coursesAfterDelete)) {
-    return console.log(chalk.green(`UPDATED: ${id} ${args[1]} ${args[2]}`));
+    if (saveCourseData(coursesAfterDelete)) {
+      return console.log(chalk.green(`UPDATED: ${id} ${args[1]} ${args[2]}`));
+    }
   }
 }
 
