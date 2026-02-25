@@ -15,11 +15,11 @@ export function parseCommand(userInput) {
   };
 }
 
-function validateCommand(command) {
+export function validateCommand(command) {
   return command.command === 'TRAINEE' || command.command === 'COURSE';
 }
 
-function validateArguments(command) {
+export function validateArguments(command) {
   return command.args.length < 4;
 }
 
