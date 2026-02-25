@@ -78,11 +78,11 @@ function deleteCourse(args) {
   }
 
   const courses = loadCourseData();
-  const courseName = courses.filter((course) => course.id === id);
+  const courseName = courses.find((course) => course.id === id);
   const newCoursesAfterDelete = courses.filter((course) => course.id !== id);
 
   if (saveCourseData(newCoursesAfterDelete)) {
-    return console.log(chalk.green(`DELETED: ${id} ${courseName[0].name}`));
+    return console.log(chalk.green(`DELETED: ${id} ${courseName.name}`));
   }
 }
 
@@ -107,8 +107,9 @@ function joinCourse(args) {
   }
 
   const courses = loadCourseData();
-  const course = courses.filter((course) => course.id === idCourse);
+  const course = courses.find((course) => course.id === idCourse);
 
+  // Check if the trainee is already in 5 courses
   let count = 0;
   for (const course of courses) {
     for (let i = 0; i < course.participants.length; i++) {
@@ -126,8 +127,9 @@ function joinCourse(args) {
     return false;
   }
 
-  for (let i = 0; i < course[0].participants.length; i++) {
-    if (idTrainee === course[0].participants[i]) {
+  // Check if the trainee already joined the course
+  for (let i = 0; i < course.participants.length; i++) {
+    if (idTrainee === course.participants[i]) {
       console.log(
         chalk.bold.red(`ERROR: The Trainee has already joined this course`)
       );
@@ -135,11 +137,12 @@ function joinCourse(args) {
     }
   }
 
-  if (isCourseFull(course[0].participants)) {
+  if (isCourseFull(course.participants)) {
     console.log(chalk.bold.red(`ERROR: Course is full`));
     return false;
   }
 
+  // Add the trainee to the course
   const newCourses = courses.map((course) => {
     if (course.id === idCourse) {
       return {
@@ -150,10 +153,11 @@ function joinCourse(args) {
     return course;
   });
 
+  // Get trainee details for the success message
   const traineeDetails = getTraineeById(idTrainee);
   if (saveCourseData(newCourses)) {
     return console.log(
-      chalk.green(`${traineeDetails[0].firstName} Joined ${course[0].name}`)
+      chalk.green(`${traineeDetails.firstName} Joined ${course.name}`)
     );
   }
 }
@@ -179,11 +183,11 @@ function leaveCourse(args) {
   }
 
   const courses = loadCourseData();
-  const course = courses.filter((course) => course.id === idCourse);
+  const course = courses.find((course) => course.id === idCourse);
 
   let isTraineeInCourse = false;
-  for (let i = 0; i < course[0].participants.length; i++) {
-    if (idTrainee === course[0].participants[i]) {
+  for (let i = 0; i < course.participants.length; i++) {
+    if (idTrainee === course.participants[i]) {
       isTraineeInCourse = true;
     }
   }
@@ -207,7 +211,7 @@ function leaveCourse(args) {
   const traineeDetails = getTraineeById(idTrainee);
   if (saveCourseData(newCourses)) {
     return console.log(
-      chalk.green(`${traineeDetails[0].firstName} Left ${course[0].name}`)
+      chalk.green(`${traineeDetails.firstName} Left ${course.name}`)
     );
   }
 }
@@ -224,19 +228,19 @@ function getCourse(args) {
   }
 
   const courses = loadCourseData();
-  const course = courses.filter((course) => course.id === id);
+  const course = courses.find((course) => course.id === id);
 
-  console.log(`${course[0].id} ${course[0].name} ${course[0].startDate}`);
+  console.log(`${course.id} ${course.name} ${course.startDate}`);
 
-  console.log(`Participants (${course[0].participants.length}):`);
+  console.log(`Participants (${course.participants.length}):`);
 
-  const allParticipantsIds = course[0].participants;
+  const allParticipantsIds = course.participants;
 
   let traineeDetails = [];
   for (let i = 0; i < allParticipantsIds.length; i++) {
     traineeDetails = getTraineeById(allParticipantsIds[i]);
     console.log(
-      `- ${allParticipantsIds[i]} ${traineeDetails[0].firstName} ${traineeDetails[0].lastName}`
+      `- ${allParticipantsIds[i]} ${traineeDetails.firstName} ${traineeDetails.lastName}`
     );
   }
 }
@@ -346,8 +350,8 @@ function generateUniqueId() {
 
 function isCourseExist(id) {
   const courses = loadCourseData();
-  const course = courses.filter((course) => course.id === id);
-  if (course.length === 0) {
+  const course = courses.find((course) => course.id === id);
+  if (course === undefined) {
     return false;
   }
   return true;

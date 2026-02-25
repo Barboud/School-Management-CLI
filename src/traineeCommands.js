@@ -46,20 +46,18 @@ function updateTrainee(args) {
 
   const trainees = loadTraineeData();
 
-  const oldTraineeDetails = trainees.filter((course) => course.id === id);
-  const traineesAfterDelete = trainees.filter(
-    (trainee) => trainee.id !== oldTraineeDetails[0].id
-  );
+  const updatedTrainees = trainees.map((trainee) => {
+    if (trainee.id === id) {
+      return {
+        ...trainee,
+        firstName: args[1],
+        lastName: args[2],
+      };
+    }
+    return trainee;
+  });
 
-  const newTraineeDetails = {
-    id: oldTraineeDetails[0].id,
-    firstName: args[1],
-    lastName: args[2],
-  };
-
-  traineesAfterDelete.push(newTraineeDetails);
-
-  if (saveTraineeData(traineesAfterDelete)) {
+  if (saveTraineeData(updatedTrainees)) {
     return console.log(chalk.green(`UPDATED: ${id} ${args[1]} ${args[2]}`));
   }
 }
@@ -78,7 +76,7 @@ function deleteTrainee(args) {
   }
 
   const trainees = loadTraineeData();
-  const traineeDetails = trainees.filter((course) => course.id === id);
+  const traineeDetails = trainees.find((trainee) => trainee.id === id);
   const newTraineesAfterDelete = trainees.filter(
     (trainee) => trainee.id !== id
   );
@@ -86,7 +84,7 @@ function deleteTrainee(args) {
   if (saveTraineeData(newTraineesAfterDelete)) {
     return console.log(
       chalk.green(
-        `DELETED: ${id} ${traineeDetails[0].firstName} ${traineeDetails[0].lastName}`
+        `DELETED: ${id} ${traineeDetails.firstName} ${traineeDetails.lastName}`
       )
     );
   }
@@ -106,16 +104,14 @@ export function fetchTrainee(args) {
   }
 
   const trainees = loadTraineeData();
-  const trainee = trainees.filter((trainee) => trainee.id === id);
+  const trainee = trainees.find((trainee) => trainee.id === id);
 
-  console.log(
-    `${trainee[0].id} ${trainee[0].firstName} ${trainee[0].lastName}`
-  );
+  console.log(`${trainee.id} ${trainee.firstName} ${trainee.lastName}`);
 
   const courses = loadCourseData();
   let traineeCourses = [];
   for (const course of courses) {
-    if (course.participants.includes(trainee[0].id)) {
+    if (course.participants.includes(trainee.id)) {
       traineeCourses.push(course.name);
     }
   }
@@ -170,8 +166,8 @@ export function handleTraineeCommand(subcommand, args) {
 
 export function isTraineeExist(id) {
   const trainees = loadTraineeData();
-  const trainee = trainees.filter((trainee) => trainee.id === id);
-  if (trainee.length === 0) {
+  const trainee = trainees.find((trainee) => trainee.id === id);
+  if (trainee === undefined) {
     return false;
   }
   return true;
@@ -182,12 +178,12 @@ function generateUniqueId() {
     return Math.floor(Math.random() * 99999) + 1;
   }
 
-  const courses = loadCourseData();
-  const courseIds = courses.map((course) => course.id);
+  const trainees = loadTraineeData();
+  const traineeIds = trainees.map((trainee) => trainee.id);
 
   let uniqueId = getUniqueId();
-  for (let i = 0; i < courseIds.length; i++) {
-    while (uniqueId === courseIds[i]) {
+  for (let i = 0; i < traineeIds.length; i++) {
+    while (uniqueId === traineeIds[i]) {
       uniqueId = getUniqueId();
       i = 0;
     }
@@ -200,7 +196,7 @@ export function getTraineeById(args) {
   const id = Number(args);
 
   const trainees = loadTraineeData();
-  const trainee = trainees.filter((trainee) => trainee.id === id);
+  const trainee = trainees.find((trainee) => trainee.id === id);
 
   return trainee;
 }
